@@ -1,28 +1,30 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
+import { connectDB } from './config/db.js'; // Fixed path
+import colors from 'colors';
 import dotenv from 'dotenv';
-import userRoutes from './routes/users.js';
 import authRoutes from './routes/auth.js';
-import dataRoutes from './routes/data.js';
-// HIyTRIUWPX03THHR
-// abrarkhan778008
+import classifyRouter from './routes/classify.js';
+import productivityRoutes from './routes/productivity.js';
+import classifierRouter from './routes/classify.js';
+// 1. Configure environment variables
 dotenv.config();
+
+// 2. Create Express app
 const app = express();
 
-// Middleware
-app.use(cors());
+// 3. Connect to MongoDB
+connectDB();
+
+// 4. Middleware
 app.use(express.json());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
-
-// Routes
-app.use('/api/users', userRoutes);
+// 5. Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/data', dataRoutes);
-
+app.use('/api/time', productivityRoutes);
+app.use('/api/classify', classifierRouter);
+app.use('/api/classify', classifyRouter);
+// 6. Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.bgWhite.blue.bold);
+});
