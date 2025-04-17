@@ -1,18 +1,22 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { HfInference } from '@huggingface/inference';
-const hf = new HfInference('YOUR_HF_TOKEN');
+
+const hf = new HfInference(process.env.HUGGING_FACE_TOKEN);
 
 export async function classifyProductivity(text) {
-  const response = await hf.zeroShotClassification({
+  const response = await hf.request({
     model: 'facebook/bart-large-mnli',
     inputs: text,
     parameters: {
-      candidate_labels: ['productive', 'unproductive'], // Only 2 labels
-    }
+      candidate_labels: ['productive', 'unproductive'],
+    },
   });
 
-  // Returns { label: 'productive', score: 0.92 }
+  // Parse and return higheest scorinig label
   return {
-    label: response.labels[0], // Highest scoring label
+    label: response.labels[0],
     score: response.scores[0]
   };
 }

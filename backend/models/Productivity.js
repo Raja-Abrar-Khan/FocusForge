@@ -11,11 +11,11 @@ const productivitySchema = new mongoose.Schema({
     default: Date.now 
   },
   productiveTime: { 
-    type: Number,  // in seconds
+    type: Number,  
     default: 0 
   },
   unproductiveTime: { 
-    type: Number,  // in seconds
+    type: Number,  
     default: 0 
   }
 });
