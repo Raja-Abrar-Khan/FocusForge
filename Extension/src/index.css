@@ -1,3 +1,59 @@
 @import "tailwindcss";
 
 @tailwind utilities;
+:root {
+    --neon-blue: #00f0ff;
+    --neon-green: #00ff88;
+    --neon-red: #ff4d4d;
+    --neon-yellow: #ffd700;
+  }
+  
+  .text-neon-blue {
+    color: var(--neon-blue);
+  }
+  
+  .text-neon-green {
+    color: var(--neon-green);
+  }
+  
+  .text-neon-red {
+    color: var(--neon-red);
+  }
+  
+  .text-neon-yellow {
+    color: var(--neon-yellow);
+  }
+  
+  .shadow-glow-blue {
+    box-shadow: 0 0 8px var(--neon-blue), 0 0 16px rgba(0, 240, 255, 0.3);
+  }
+  
+  .shadow-glow-green {
+    box-shadow: 0 0 8px var(--neon-green), 0 0 16px rgba(0, 255, 136, 0.3);
+  }
+  
+  .shadow-glow-red {
+    box-shadow: 0 0 8px var(--neon-red), 0 0 16px rgba(255, 77, 77, 0.3);
+  }
+  
+  .shadow-glow-yellow {
+    box-shadow: 0 0 8px var(--neon-yellow), 0 0 16px rgba(255, 215, 0, 0.3);
+  }
+  
+  /* Scrollbar styling for Chrome */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--neon-blue);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00ccff;
+  }
