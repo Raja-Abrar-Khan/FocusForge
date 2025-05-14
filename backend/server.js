@@ -18,7 +18,8 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['chrome-extension://*', 'http://localhost:5000'],
+  origin: ['chrome-extension://*', 'http://localhost:5000', 'http://localhost:5173'], // Add frontend origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Explicitly allow methods
   credentials: true,
 }));
 app.use(express.json());
