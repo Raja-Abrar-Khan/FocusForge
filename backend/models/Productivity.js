@@ -1,3 +1,4 @@
+// File: Backend/models/Productivity.js
 import mongoose from 'mongoose';
 
 const productivitySchema = new mongoose.Schema({
@@ -20,11 +21,12 @@ const productivitySchema = new mongoose.Schema({
   },
   hourlyData: [{ 
     hour: { type: Number, min: 0, max: 23 }, 
-    productiveTime: { type: Number, default: 0 } 
-  }], // e.g., [{ hour: 9, productiveTime: 3600 }]
+    productiveTime: { type: Number, default: 0 },
+    unproductiveTime: { type: Number, default: 0 } // Added
+  }],
   category: { 
     type: String 
-  } // e.g., "coding", "studying"
+  }
 });
 
 export default mongoose.model('Productivity', productivitySchema);

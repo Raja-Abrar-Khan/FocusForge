@@ -1,3 +1,4 @@
+// File: Backend/controllers/Productivity.js
 import Productivity from '../models/Productivity.js';
 
 export const addProductiveTime = async (req, res) => {
@@ -45,11 +46,15 @@ export const updateTime = async (req, res) => {
       $inc: { [isProductive ? 'productiveTime' : 'unproductiveTime']: seconds }
     };
 
-    if (isProductive) {
-      update.$push = { hourlyData: { hour, productiveTime: seconds } };
-      if (category) {
-        update.$set = { category }; // Ensure category is set
+    update.$push = {
+      hourlyData: {
+        hour,
+        [isProductive ? 'productiveTime' : 'unproductiveTime']: seconds
       }
+    };
+
+    if (category) {
+      update.$set = { category };
     }
 
     const entry = await Productivity.findOneAndUpdate(
@@ -81,20 +86,28 @@ export const TodayTimeasync = async (req, res) => {
 export const getWeeklyTime = async (req, res) => {
   try {
     const startOfWeek = new Date();
-    startOfWeek.setDate(startOfWeek.getDate() - 7);
+    startOfWeek.setDate(startOfWeek.getDate() - 6);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const entries = await Productivity.find({
       user: req.user._id,
       date: { $gte: startOfWeek },
-    });
+    }).sort({ date: 1 });
 
     const totalMetrics = entries.reduce(
       (acc, entry) => ({
         productiveTime: acc.productiveTime + (entry.productiveTime || 0),
         unproductiveTime: acc.unproductiveTime + (entry.unproductiveTime || 0),
+        dailyBreakdown: [
+          ...acc.dailyBreakdown,
+          {
+            date: entry.date,
+            productiveTime: entry.productiveTime || 0,
+            unproductiveTime: entry.unproductiveTime || 0
+          }
+        ]
       }),
-      { productiveTime: 0, unproductiveTime: 0 }
+      { productiveTime: 0, unproductiveTime: 0, dailyBreakdown: [] }
     );
 
     res.json(totalMetrics);
@@ -178,22 +191,45 @@ export const getHeatmapData = async (req, res) => {
 export const getHourlyData = async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Start of today in UTC
+    today.setHours(0, 0, 0, 0);
 
     const entries = await Productivity.find({
       user: req.user._id,
       date: { $gte: today, $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) }
     }).select('hourlyData');
 
-    const hourlyMap = Array(24).fill(0);
+    const hourlyMap = Array(24).fill().map(() => ({ productiveTime: 0, unproductiveTime: 0 }));
     entries.forEach(entry => {
-      entry.hourlyData.forEach(({ hour, productiveTime }) => {
-        hourlyMap[hour] = (hourlyMap[hour] || 0) + productiveTime;
+      entry.hourlyData.forEach(({ hour, productiveTime, unproductiveTime }) => {
+        hourlyMap[hour].productiveTime += productiveTime || 0;
+        hourlyMap[hour].unproductiveTime += unproductiveTime || 0;
       });
     });
 
-    res.json(hourlyMap.map((time, hour) => ({ hour, productiveTime: time })));
+    res.json(hourlyMap.map((data, hour) => ({ hour, ...data })));
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getWeeklyHours = async (req, res) => {
+  try {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 6);
+    startDate.setHours(0, 0, 0, 0);
+
+    const data = await Productivity.find({
+      user: req.user._id,
+      date: { $gte: startDate, $lte: new Date() }
+    }).sort({ date: 1 });
+
+    const weeklyHourly = data.map(day => ({
+      date: day.date,
+      hourly: day.hourlyData || []
+    }));
+    res.json(weeklyHourly);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
