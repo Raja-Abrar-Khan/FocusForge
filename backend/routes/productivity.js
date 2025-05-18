@@ -1,12 +1,30 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth.js';
-import { addProductiveTime, addUnproductiveTime, TodayTimeasync, updateTime, getWeeklyTime } from '../controllers/Productivity.js';
+import {
+  addProductiveTime,
+  addUnproductiveTime,
+  TodayTimeasync,
+  updateTime,
+  getWeeklyTime,
+  getMonthlyTime,
+  getYearlyTime,
+  getHeatmapData,
+  getHourlyData,
+  getCategories,
+  getStreak
+} from '../controllers/Productivity.js';
 
 const router = express.Router();
 router.post('/productive', authenticate, addProductiveTime);
 router.post('/unproductive', authenticate, addUnproductiveTime);
 router.post('/update-time', authenticate, updateTime);
 router.get('/today', authenticate, TodayTimeasync);
-router.get('/week', authenticate, getWeeklyTime); // New endpoint
+router.get('/week', authenticate, getWeeklyTime);
+router.get('/month', authenticate, getMonthlyTime);
+router.get('/year', authenticate, getYearlyTime);
+router.get('/heatmap', authenticate, getHeatmapData);
+router.get('/hours', authenticate, getHourlyData);
+router.get('/categories', authenticate, getCategories);
+router.get('/streak', authenticate, getStreak);
 
 export default router;

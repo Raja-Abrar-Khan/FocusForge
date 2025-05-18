@@ -17,7 +17,14 @@ const productivitySchema = new mongoose.Schema({
   unproductiveTime: { 
     type: Number,  
     default: 0 
-  }
+  },
+  hourlyData: [{ 
+    hour: { type: Number, min: 0, max: 23 }, 
+    productiveTime: { type: Number, default: 0 } 
+  }], // e.g., [{ hour: 9, productiveTime: 3600 }]
+  category: { 
+    type: String 
+  } // e.g., "coding", "studying"
 });
 
 export default mongoose.model('Productivity', productivitySchema);
