@@ -1,32 +1,24 @@
-// File: Backend/models/Productivity.js
 import mongoose from 'mongoose';
 
-const productivitySchema = new mongoose.Schema({
-  user: { 
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true 
-  },
-  date: { 
-    type: Date,
-    default: Date.now 
-  },
-  productiveTime: { 
-    type: Number,  
-    default: 0 
-  },
-  unproductiveTime: { 
-    type: Number,  
-    default: 0 
-  },
-  hourlyData: [{ 
-    hour: { type: Number, min: 0, max: 23 }, 
-    productiveTime: { type: Number, default: 0 },
-    unproductiveTime: { type: Number, default: 0 } // Added
+const ProductivitySchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  date: { type: Date, required: true },
+  productiveTime: { type: Number, default: 0 },
+  unproductiveTime: { type: Number, default: 0 },
+  activityTime: { type: Map, of: Number, default: {} },
+  hourlyData: [{ hour: Number, productiveTime: { type: Number, default: 0 }, unproductiveTime: { type: Number, default: 0 } }],
+  history: [{
+    startTime: Date,
+    endTime: Date,
+    url: String,
+    data: String,
+    dataType: String,
+    isProductive: Boolean,
+    confidence: Number,
+    activityType: String,
+    screenshot: { type: mongoose.Schema.Types.ObjectId, ref: 'Screenshot' },
   }],
-  category: { 
-    type: String 
-  }
+  category: { type: String, default: '' },
 });
 
-export default mongoose.model('Productivity', productivitySchema);
+export default mongoose.model('Productivity', ProductivitySchema);
