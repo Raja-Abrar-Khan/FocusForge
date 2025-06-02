@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import Header from '../components/Header';
+import DashboardHeader from '../components/DashboardHeader';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import TodaysFocus from '../components/dashboard/TodaysFocus';
@@ -15,7 +16,6 @@ import ProductivityScore from '../components/dashboard/ProductivityScore';
 import ActivityTimeline from '../components/dashboard/ActivityTimeline';
 import ScreenshotCarousel from '../components/dashboard/ScreenshotCarousel';
 import WeeklyActivityTimeline from '../components/dashboard/WeeklyActivityTimeline';
-import { Bars3Icon } from '@heroicons/react/24/outline';
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -125,7 +125,7 @@ function Dashboard() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-[#0A0A2A] to-[#1E1E4A]' : 'bg-gradient-to-br from-gray-100 to-blue-100'} text-${theme === 'dark' ? 'gray-100' : 'gray-900'} font-montserrat`}>
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-gradient-to-br from-[#0A0A2A] to-[#1E1E4A]' : 'bg-gradient-to-br from-gray-100 to-blue-100'} text-${theme === 'dark' ? 'gray-100' : 'gray-900'} font-montserrat`}>
       <style>{`
         .holographic {
           background: ${theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
@@ -148,7 +148,7 @@ function Dashboard() {
           color: ${theme === 'dark' ? '#FFD700' : '#DAA520'};
         }
         .text-danger {
-          color: #FF00FF;
+          color: '#FF00FF';
         }
         .bg-primary {
           background-color: ${theme === 'dark' ? '#00F5FF' : '#1E3A8A'};
@@ -157,61 +157,107 @@ function Dashboard() {
           background-color: ${theme === 'dark' ? '#1E1E4A' : '#E5E7EB'};
         }
         .bg-danger {
-          background-color: #FF00FF;
+          background-color: '#FF00FF';
         }
         .border-primary {
-          border-color: ${theme === 'dark' ? '#00F5FF' : '#1E3A8A'};
+          border-color: '#00F5FF';
+        }
+        .custom-scrollbar {
+          scrollbar-width: thin;
         }
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: ${theme === 'dark' ? '#1E1E4A' : '#E5E7EB'};
+          background: ${theme === 'dark' ? '#1E2A44' : '#E5E7EB'};
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: #00F5FF;
           border-radius: 3px;
         }
-        .row-height {
+        .uniform-row {
           height: 20rem;
+          display: flex;
+          flex-direction: column;
+        }
+        .uniform-row > * {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        .todays-focus-container {
+          overflow-y: auto;
+          padding: 1rem;
         }
         .chart-row-height {
-          height: 24rem;
-          overflow: hidden;
+          height: 20rem;
+          max-height: 20rem;
+          display: flex;
+          flex-direction: column;
+        }
+        .chart-row-height > * {
+          flex: 1;
+          min-height: 0;
         }
         .chart-row-height canvas {
-          max-height: 100%;
+          height: 100% !important;
+          max-height: 20rem !important;
         }
         header {
-          padding-left: 3rem;
           z-index: 60;
         }
-        @media (max-width: 640px) {
-          .row-height, .chart-row-height {
-            height: auto;
-            min-height: 16rem;
-          }
-          .grid-cols-3 {
-            grid-template-columns: 1fr;
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.5rem;
+          max-width: 80rem;
+          margin: 0 auto;
+        }
+        @media (min-width: 1024px) and (max-width: 1440px) {
+          .grid-container {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
           }
           .md\\:col-span-2 {
+            grid-column: span 2;
+          }
+          .md\\:col-span-3 {
+            grid-column: span 3;
+          }
+        }
+        @media (max-width: 1024px) {
+          .grid-container {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+          .md\\:col-span-2, .md\\:col-span-3 {
             grid-column: span 1;
           }
-          header {
-            padding-left: 2.5rem;
+          .uniform-row, .chart-row-height {
+            height: auto;
+            min-height: 18rem;
+          }
+          .chart-row-height canvas {
+            max-height: 18rem !important;
           }
         }
-        @media (min-width: 640px) and (max-width: 1024px) {
-          .row-height {
-            height: 18rem;
+        @media (max-width: 640px) {
+          .uniform-row, .chart-row-height {
+            min-height: 16rem;
           }
-          .chart-row-height {
-            height: 22rem;
+          .chart-row-height canvas {
+            max-height: 16rem !important;
           }
-        }
-        @media (min-width: 1024px) {
-          .grid-cols-3 {
-            grid-template-columns: repeat(3, 1fr);
+          .grid-container {
+            gap: 0.75rem;
+          }
+          main {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+          }
+          .todays-focus-container {
+            padding: 0.5rem;
           }
         }
       `}</style>
@@ -242,15 +288,8 @@ function Dashboard() {
         />
       </ErrorBoundary>
       <div className="flex-1 flex flex-col">
-        <Header />
-        <motion.button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`fixed top-4 left-4 p-3 rounded-full bg-secondary text-primary glow z-50 md:top-20 md:left-6`}
-          whileHover={{ scale: 1.1 }}
-        >
-          <Bars3Icon className="w-6 h-6" />
-        </motion.button>
-        <main className="flex-grow px-4 py-12 pt-32 max-w-7xl mx-auto">
+        <DashboardHeader toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <main className="flex-grow px-4 py-12 pt-28">
           {loading ? (
             <div className="flex justify-center items-center h-[80vh]">
               <motion.div
@@ -263,7 +302,7 @@ function Dashboard() {
             <div className="text-danger text-center text-lg">{error}</div>
           ) : (
             <>
-              <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
+              <div className="mb-8 flex justify-between items-center flex-wrap gap-4 max-w-7xl mx-auto">
                 <h1 className="text-3xl font-orbitron font-extrabold gold-gradient">FocusForge Dashboard</h1>
                 <div className="flex gap-3">
                   <motion.button
@@ -282,7 +321,7 @@ function Dashboard() {
                   </motion.button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-min">
+              <div className="grid-container">
                 {/* Row 1: ProductivityScore */}
                 <ErrorBoundary>
                   <div className="col-span-1 md:col-span-3">
@@ -299,19 +338,21 @@ function Dashboard() {
                 </ErrorBoundary>
                 {/* Row 2: TodaysFocus, ActivityTimeline, WeeklyActivityTimeline */}
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
-                    <TodaysFocus 
-                      todayData={todayData}
-                      streak={streak}
-                      dailyGoal={dailyGoal}
-                      formatTime={formatTime}
-                      calculateScore={calculateScore}
-                      theme={theme}
-                    />
+                  <div className="col-span-1 uniform-row">
+                    <div className="todays-focus-container">
+                      <TodaysFocus 
+                        todayData={todayData}
+                        streak={streak}
+                        dailyGoal={dailyGoal}
+                        formatTime={formatTime}
+                        calculateScore={calculateScore}
+                        theme={theme}
+                      />
+                    </div>
                   </div>
                 </ErrorBoundary>
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
+                  <div className="col-span-1 uniform-row">
                     <ActivityTimeline
                       history={history}
                       theme={theme}
@@ -321,7 +362,7 @@ function Dashboard() {
                   </div>
                 </ErrorBoundary>
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
+                  <div className="col-span-1 uniform-row">
                     <WeeklyActivityTimeline
                       weeklyData={weeklyData}
                       theme={theme}
@@ -332,12 +373,12 @@ function Dashboard() {
                 </ErrorBoundary>
                 {/* Row 3: ScreenshotCarousel, ProductivityCharts */}
                 <ErrorBoundary>
-                  <div className="col-span-1 md:col-span-1 chart-row-height mt-40">
+                  <div className="col-span-1 chart-row-height uniform-row mt-6">
                     <ScreenshotCarousel screenshots={screenshots} theme={theme} />
                   </div>
                 </ErrorBoundary>
                 <ErrorBoundary>
-                  <div className="col-span-1 md:col-span-2 chart-row-height mt-40">
+                  <div className="col-span-1 md:col-span-2 chart-row-height uniform-row mt-6">
                     <ProductivityCharts
                       todayData={todayData}
                       weeklyData={weeklyData}
@@ -350,7 +391,7 @@ function Dashboard() {
                 </ErrorBoundary>
                 {/* Row 4: Achievements, TopHours, InsightsAndInspiration */}
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
+                  <div className="col-span-1 uniform-row">
                     <Achievements
                       score={calculateScore(todayData.productiveTime, todayData.unproductiveTime)}
                       streak={streak}
@@ -360,12 +401,12 @@ function Dashboard() {
                   </div>
                 </ErrorBoundary>
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
+                  <div className="col-span-1 uniform-row">
                     <TopHours weeklyHourlyData={weeklyHourlyData} theme={theme} />
                   </div>
                 </ErrorBoundary>
                 <ErrorBoundary>
-                  <div className="col-span-1 row-height">
+                  <div className="col-span-1 uniform-row">
                     <InsightsAndInspiration theme={theme} todayData={todayData} hourlyData={hourlyData} />
                   </div>
                 </ErrorBoundary>
@@ -379,51 +420,51 @@ function Dashboard() {
             </>
           )}
         </main>
-        <GoalSetterModal
-          isOpen={isGoalModalOpen}
-          onClose={() => setIsGoalModalOpen(false)}
-          onSave={(hours) => setDailyGoal(hours)}
-          currentGoal={dailyGoal}
-          theme={theme}
-        />
-        {showFullTimeline && (
-          <motion.div
-            className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="p-6 max-w-3xl mx-auto">
-              <motion.button
-                onClick={() => setShowFullTimeline(false)}
-                className="mb-4 px-4 py-2 bg-danger text-white rounded-lg glow text-base font-bold"
-                whileHover={{ scale: 1.05 }}
-              >
-                Close
-              </motion.button>
-              <ActivityTimeline history={history} theme={theme} showFull={true} />
-            </div>
-          </motion.div>
-        )}
-        {showFullWeekly && (
-          <motion.div
-            className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="p-6 max-w-3xl mx-auto">
-              <motion.button
-                onClick={() => setShowFullWeekly(false)}
-                className="mb-4 px-4 py-2 bg-danger text-white rounded-lg glow text-base font-bold"
-                whileHover={{ scale: 1.05 }}
-              >
-                Close
-              </motion.button>
-              <WeeklyActivityTimeline weeklyData={weeklyData} theme={theme} showFull={true} />
-            </div>
-          </motion.div>
-        )}
         <Footer />
       </div>
+      <GoalSetterModal
+        isOpen={isGoalModalOpen}
+        onClose={() => setIsGoalModalOpen(false)}
+        onSave={(hours) => setDailyGoal(hours)}
+        currentGoal={dailyGoal}
+        theme={theme}
+      />
+      {showFullTimeline && (
+        <motion.div
+          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="p-6 max-w-3xl mx-auto">
+            <motion.button
+              onClick={() => setShowFullTimeline(false)}
+              className="mb-4 px-4 py-2 bg-danger text-white rounded-lg glow text-base font-bold"
+              whileHover={{ scale: 1.05 }}
+            >
+              Close
+            </motion.button>
+            <ActivityTimeline history={history} theme={theme} showFull={true} />
+          </div>
+        </motion.div>
+      )}
+      {showFullWeekly && (
+        <motion.div
+          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="p-6 max-w-3xl mx-auto">
+            <motion.button
+              onClick={() => setShowFullWeekly(false)}
+              className="mb-4 px-4 py-2 bg-danger text-white rounded-lg glow text-base font-bold"
+              whileHover={{ scale: 1.05 }}
+            >
+              Close
+            </motion.button>
+            <WeeklyActivityTimeline weeklyData={weeklyData} theme={theme} showFull={true} />
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
