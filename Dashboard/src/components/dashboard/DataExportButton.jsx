@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// File: Frontend/src/components/dashboard/DataExportButton.jsx
 import { motion } from 'framer-motion';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
@@ -23,7 +21,7 @@ function DataExportButton({ todayData, formatTime, theme }) {
   return (
     <motion.button
       onClick={exportToCSV}
-      className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg ${theme === 'dark' ? 'bg-[#1E1E4A] text-[#00F5FF] hover:bg-[#00F5FF] hover:text-[#0A0A2A]' : 'bg-gray-200 text-blue-600 hover:bg-blue-600 hover:text-white'} transition glow`}
+      className={`w-full flex items-center justify-center gap-2 px-4 py-2 sm:py-3 rounded-lg bg-secondary text-primary hover:bg-primary hover:text-white transition glow text-sm sm:text-base font-bold`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Export data as CSV"

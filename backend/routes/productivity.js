@@ -13,6 +13,7 @@ import {
   getWeeklyHours,
   getCategories,
   getStreak,
+  getTodayHistory,
 } from '../controllers/productivity.js';
 
 const router = express.Router();
@@ -52,5 +53,5 @@ router.get('/categories', authenticate, getCategories);
 
 // Get productivity streak
 router.get('/streak', authenticate, getStreak);
-
+router.get('/history', authenticate, getTodayHistory);
 export default router;

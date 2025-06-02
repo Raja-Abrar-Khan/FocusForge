@@ -1,40 +1,79 @@
-/* eslint-disable no-unused-vars */
-// File: Frontend/src/components/dashboard/Achievements.jsx
+import React from 'react';
 import { motion } from 'framer-motion';
-import { TrophyIcon } from '@heroicons/react/24/outline';
-import Tilt from 'react-parallax-tilt';
+import { TrophyIcon, StarIcon } from '@heroicons/react/24/outline';
 
-function Achievements({ theme }) {
-  const badges = ['7 Day Streak', '50h Focus', 'Night Owl', 'Early Bird'];
+function Achievements({ theme, score, streak, todayData }) {
+  const achievements = [];
+  if (streak >= 7) achievements.push({ title: 'Week Warrior', desc: '7+ day streak!', icon: TrophyIcon });
+  if (streak >= 30) achievements.push({ title: 'Month Master', desc: '30+ day streak!', icon: StarIcon });
+  if (score >= 80) achievements.push({ title: 'Top Performer', desc: 'Score 80%+ today!', icon: TrophyIcon });
+  if ((todayData.productiveTime || 0) >= 6 * 3600) achievements.push({ title: 'Marathon', desc: '6+ productive hours!', icon: StarIcon });
+  if ((todayData.productiveTime || 0) >= 8 * 3600) achievements.push({ title: 'Ultra Marathon', desc: '8+ productive hours!', icon: TrophyIcon });
+  if (score >= 90) achievements.push({ title: 'Elite Focus', desc: 'Score 90%+ today!', icon: StarIcon });
+
+  // Progress to next achievement (e.g., next streak or score milestone)
+  const nextStreakGoal = streak < 7 ? 7 : streak < 30 ? 30 : 60;
+  const streakProgress = (streak / nextStreakGoal) * 100;
+  const nextScoreGoal = score < 80 ? 80 : score < 90 ? 90 : 100;
+  const scoreProgress = (score / nextScoreGoal) * 100;
 
   return (
-    <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
-      <motion.div
-        className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        role="region"
-        aria-label="Achievements"
-      >
-        <h2 className={`text-xl font-orbitron ${theme === 'dark' ? 'bg-gradient-to-r from-[#00F5FF] to-[#FF00FF] bg-clip-text text-transparent' : 'text-blue-900'} mb-4`}>
-          Achievements
-        </h2>
-        <div className="grid grid-cols-2 gap-3">
-          {badges.map((badge) => (
+    <motion.div
+      className={`p-4 sm:p-6 rounded-xl holographic glow text-${theme === 'dark' ? 'gray-100' : 'gray-900'} h-full flex flex-col bg-opacity-80 backdrop-blur-lg`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+    >
+      <h2 className={`text-lg sm:text-xl font-roboto font-bold text-primary mb-4 sm:mb-6`}>
+        Achievements
+      </h2>
+      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
+        {achievements.length === 0 ? (
+          <p className={`text-sm font-medium text-secondary`}>
+            No achievements yet. Keep pushing!
+          </p>
+        ) : (
+          achievements.map((ach, i) => (
             <motion.div
-              key={badge}
-              className={`${theme === 'dark' ? 'bg-[#1E1E4A]/50' : 'bg-gray-100/50'} p-3 rounded-lg text-center glow`}
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
+              key={i}
+              className="flex items-center gap-3 bg-primary/10 p-3 rounded-lg"
+              whileHover={{ scale: 1.02 }}
+              transition={{ ease: 'easeOut' }}
             >
-              <TrophyIcon className={`w-6 h-6 ${theme === 'dark' ? 'text-[#00F5FF]' : 'text-blue-600'} mx-auto mb-1`} />
-              <p className={`text-xs ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{badge}</p>
+              <ach.icon className="w-5 sm:w-6 h-5 sm:h-6 text-primary" />
+              <div>
+                <p className="text-sm sm:text-base font-semibold text-primary">{ach.title}</p>
+                <p className="text-sm font-medium text-secondary">{ach.desc}</p>
+              </div>
             </motion.div>
-          ))}
+          ))
+        )}
+        <div className="mt-4">
+          <p className="text-sm font-semibold text-primary">Next Goal: {nextStreakGoal}-Day Streak</p>
+          <div className="h-2 bg-secondary rounded-full mt-1">
+            <motion.div
+              className="h-full bg-primary rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${streakProgress}%` }}
+              transition={{ duration: 1 }}
+            />
+          </div>
+          <p className="text-xs text-secondary mt-1">{Math.round(streakProgress)}% to next streak</p>
         </div>
-      </motion.div>
-    </Tilt>
+        <div className="mt-2">
+          <p className="text-sm font-semibold text-primary">Next Goal: {nextScoreGoal}% Score</p>
+          <div className="h-2 bg-secondary rounded-full mt-1">
+            <motion.div
+              className="h-full bg-primary rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${scoreProgress}%` }}
+              transition={{ duration: 1 }}
+            />
+          </div>
+          <p className="text-xs text-secondary mt-1">{Math.round(scoreProgress)}% to next score</p>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 

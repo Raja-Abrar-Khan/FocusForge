@@ -1,4 +1,4 @@
-// File: Backend/server.js
+// backend/server.js
 import express from 'express';
 import { connectDB } from './config/db.js';
 import colors from 'colors';
@@ -6,10 +6,11 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import classifyRouter from './routes/classify.js';
 import timeRoutes from './routes/productivity.js';
+import screenshotRoutes from './routes/screenshot.js'; // Add this
 import cors from 'cors';
 
 dotenv.config();
-console.log('NODE_ENV:', process.env.NODE_ENV); // Debug
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 const app = express();
 connectDB();
@@ -17,13 +18,14 @@ connectDB();
 app.use(cors({
   origin: ['chrome-extension://*', 'http://localhost:5000', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/time', timeRoutes);
 app.use('/api/classify', classifyRouter);
+app.use('/api/screenshots', screenshotRoutes); // Add this
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

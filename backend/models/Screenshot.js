@@ -1,11 +1,11 @@
+// backend/models/Screenshot.js
 import mongoose from 'mongoose';
 
-const ScreenshotSchema = new mongoose.Schema({
+const screenshotSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, required: true },
   imageBase64: { type: String, required: true },
-  url: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  url: { type: String, default: 'Manual' },
 });
 
-export default mongoose.model('Screenshot', ScreenshotSchema);
+export default mongoose.model('Screenshot', screenshotSchema);

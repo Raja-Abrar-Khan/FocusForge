@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// File: Frontend/src/components/dashboard/ProductivityInsights.jsx
 import { motion } from 'framer-motion';
 import { LightBulbIcon } from '@heroicons/react/24/outline';
 import Tilt from 'react-parallax-tilt';
@@ -25,17 +23,15 @@ function ProductivityInsights({ todayData, hourlyData, theme }) {
     return (
       <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
         <motion.div
-          className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
+          className={`p-4 sm:p-6 rounded-2xl holographic glow text-${theme === 'dark' ? 'gray-100' : 'gray-900'} h-full`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           role="region"
           aria-label="Productivity Insights"
         >
-          <h2 className={`text-xl font-orbitron ${theme === 'dark' ? 'bg-gradient-to-r from-[#00F5FF] to-[#FF00FF] bg-clip-text text-transparent' : 'text-blue-900'} mb-4`}>
-            Insights
-          </h2>
-          <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Loading insights...</p>
+          <h2 className="text-lg sm:text-xl font-orbitron gold-gradient mb-4">Insights</h2>
+          <p className="text-sm text-secondary">Loading insights...</p>
         </motion.div>
       </Tilt>
     );
@@ -44,19 +40,17 @@ function ProductivityInsights({ todayData, hourlyData, theme }) {
   return (
     <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
       <motion.div
-        className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
+        className={`p-4 sm:p-6 rounded-2xl holographic glow text-${theme === 'dark' ? 'gray-100' : 'gray-900'} h-full`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         role="region"
         aria-label="Productivity Insights"
       >
-        <h2 className={`text-xl font-orbitron ${theme === 'dark' ? 'bg-gradient-to-r from-[#00F5FF] to-[#FF00FF] bg-clip-text text-transparent' : 'text-blue-900'} mb-4`}>
-          Insights
-        </h2>
+        <h2 className="text-lg sm:text-xl font-orbitron gold-gradient mb-4">Insights</h2>
         <div className="flex items-center gap-3">
-          <LightBulbIcon className={`w-6 h-6 ${theme === 'dark' ? 'text-[#00F5FF]' : 'text-blue-600'}`} />
-          <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{insight}</p>
+          <LightBulbIcon className="w-5 sm:w-6 h-5 sm:h-6 text-primary" />
+          <p className="text-sm text-secondary">{insight}</p>
         </div>
       </motion.div>
     </Tilt>

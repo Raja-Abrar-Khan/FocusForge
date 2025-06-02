@@ -132,6 +132,22 @@ export const TodayTimeasync = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const getTodayHistory = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const entry = await Productivity.findOne({
+      user: req.user.id,
+      date: today,
+    }).select('history').populate('history.screenshot');
+
+    res.json(entry?.history || []);
+  } catch (error) {
+    console.error('Fetch today history error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 export const getWeeklyTime = async (req, res) => {
   try {
@@ -149,19 +165,27 @@ export const getWeeklyTime = async (req, res) => {
         acc.productiveTime += entry.productiveTime || 0;
         acc.unproductiveTime += entry.unproductiveTime || 0;
         Object.entries(entry.activityTime || {}).forEach(([key, value]) => {
-          acc.activityTime[key] = (acc.activityTime[key] || 0) + value;
+          if (key !== '$schema') { // Exclude schema metadata
+            acc.activityTime[key] = (acc.activityTime[key] || 0) + value;
+          }
         });
         acc.dailyBreakdown.push({
           date: entry.date,
           productiveTime: entry.productiveTime || 0,
           unproductiveTime: entry.unproductiveTime || 0,
+          activityTime: Object.fromEntries(
+            Object.entries(entry.activityTime || {}).filter(([key]) => key !== '$schema')
+          ),
+          history: entry.history || [],
         });
         return acc;
       },
       { productiveTime: 0, unproductiveTime: 0, activityTime: {}, dailyBreakdown: [] }
     );
 
-    totalMetrics.activityTime = Object.fromEntries(Object.entries(totalMetrics.activityTime));
+    totalMetrics.activityTime = Object.fromEntries(
+      Object.entries(totalMetrics.activityTime).filter(([key]) => key !== '$schema')
+    );
 
     res.json(totalMetrics);
   } catch (error) {

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// File: Frontend/src/components/dashboard/ProductivityCharts.jsx
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Line } from 'react-chartjs-2';
@@ -32,7 +30,7 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
         fill: true,
         tension: 0.4,
         pointBackgroundColor: '#00F5FF',
-        pointBorderColor: '#0A0A2A',
+        pointBorderColor: theme === 'dark' ? '#0A0A2A' : '#F3F4F6',
         pointHoverBackgroundColor: '#FF00FF'
       },
       {
@@ -43,7 +41,7 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
         fill: true,
         tension: 0.4,
         pointBackgroundColor: '#FF00FF',
-        pointBorderColor: '#0A0A2A',
+        pointBorderColor: theme === 'dark' ? '#0A0A2A' : '#F3F4F6',
         pointHoverBackgroundColor: '#00F5FF'
       }
     ]
@@ -126,9 +124,9 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
       }
     },
     scales: {
-      x: { ticks: { color: theme === 'dark' ? '#E5E7EB' : '#1F2937', font: { size: 12 } }, grid: { color: theme === 'dark' ? '#374151' : '#D1D5DB' } },
+      x: { ticks: { color: theme === 'dark' ? '#E5E7EB' : '#1F2937', font: { size: 10 } }, grid: { color: theme === 'dark' ? '#374151' : '#D1D5DB' } },
       y: {
-        ticks: { color: theme === 'dark' ? '#E5E7EB' : '#1F2937', font: { size: 12 } },
+        ticks: { color: theme === 'dark' ? '#E5E7EB' : '#1F2937', font: { size: 10 } },
         title: { display: true, text: 'Hours', color: theme === 'dark' ? '#E5E7EB' : '#1F2937', font: { size: 12 } },
         grid: { color: theme === 'dark' ? '#374151' : '#D1D5DB' }
       }
@@ -145,7 +143,7 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
   return (
     <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
       <motion.div
-        className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'}`}
+        className={`p-4 sm:p-6 rounded-2xl holographic glow text-${theme === 'dark' ? 'gray-100' : 'gray-900'} h-full`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -153,15 +151,13 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
         aria-label="Productivity Charts"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className={`text-xl font-orbitron ${theme === 'dark' ? 'bg-gradient-to-r from-[#00F5FF] to-[#FF00FF] bg-clip-text text-transparent' : 'text-blue-900'}`}>
-            Productivity Trends
-          </h2>
+          <h2 className="text-lg sm:text-xl font-orbitron gold-gradient">Productivity Trends</h2>
           <div className="flex gap-2">
             {views.map(v => (
               <motion.button
                 key={v.id}
                 onClick={() => setView(v.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-montserrat ${view === v.id ? (theme === 'dark' ? 'bg-[#00F5FF] text-[#0A0A2A]' : 'bg-blue-600 text-white') : (theme === 'dark' ? 'bg-[#1E1E4A] text-[#00F5FF]' : 'bg-gray-200 text-gray-700')} hover:bg-opacity-90 transition glow`}
+                className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm font-montserrat ${view === v.id ? 'bg-primary text-white' : 'bg-secondary text-primary'} hover:bg-primary hover:text-white transition glow`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={`Show ${v.label} productivity`}
@@ -171,7 +167,7 @@ function ProductivityCharts({ todayData, weeklyData, monthlyData, yearlyData, ho
             ))}
           </div>
         </div>
-        <div className="h-80">
+        <div className="h-full">
           <Line
             data={views.find(v => v.id === view).data}
             options={chartOptions}
