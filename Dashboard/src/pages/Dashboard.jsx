@@ -148,7 +148,7 @@ function Dashboard() {
           color: ${theme === 'dark' ? '#FFD700' : '#DAA520'};
         }
         .text-danger {
-          color: '#FF00FF';
+          color: #FF00FF;
         }
         .bg-primary {
           background-color: ${theme === 'dark' ? '#00F5FF' : '#1E3A8A'};
@@ -157,10 +157,10 @@ function Dashboard() {
           background-color: ${theme === 'dark' ? '#1E1E4A' : '#E5E7EB'};
         }
         .bg-danger {
-          background-color: '#FF00FF';
+          background-color: #FF00FF;
         }
         .border-primary {
-          border-color: '#00F5FF';
+          border-color: ${theme === 'dark' ? '#00F5FF' : '#1E3A8A'};
         }
         .custom-scrollbar {
           scrollbar-width: thin;
@@ -174,6 +174,16 @@ function Dashboard() {
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: #00F5FF;
           border-radius: 3px;
+        }
+        .score-row {
+          height: 16rem;
+          display: flex;
+          flex-direction: column;
+        }
+        .score-row > * {
+          flex: 1;
+          min-height: 0;
+          padding: 1.5rem;
         }
         .uniform-row {
           height: 20rem;
@@ -210,14 +220,17 @@ function Dashboard() {
         .grid-container {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 1.5rem;
+          gap: 2rem;
           max-width: 80rem;
           margin: 0 auto;
+        }
+        .grid-container > div {
+          margin-bottom: 1rem;
         }
         @media (min-width: 1024px) and (max-width: 1440px) {
           .grid-container {
             grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
           }
           .md\\:col-span-2 {
             grid-column: span 2;
@@ -225,32 +238,35 @@ function Dashboard() {
           .md\\:col-span-3 {
             grid-column: span 3;
           }
+          .score-row {
+            height: 14rem;
+          }
         }
         @media (max-width: 1024px) {
           .grid-container {
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 1.5rem;
           }
           .md\\:col-span-2, .md\\:col-span-3 {
             grid-column: span 1;
           }
-          .uniform-row, .chart-row-height {
+          .score-row, .uniform-row, .chart-row-height {
             height: auto;
-            min-height: 18rem;
+            min-height: 12rem;
           }
           .chart-row-height canvas {
             max-height: 18rem !important;
           }
         }
         @media (max-width: 640px) {
-          .uniform-row, .chart-row-height {
-            min-height: 16rem;
+          .score-row, .uniform-row, .chart-row-height {
+            min-height: 10rem;
           }
           .chart-row-height canvas {
             max-height: 16rem !important;
           }
           .grid-container {
-            gap: 0.75rem;
+            gap: 1rem;
           }
           main {
             padding-left: 0.5rem;
@@ -258,6 +274,9 @@ function Dashboard() {
           }
           .todays-focus-container {
             padding: 0.5rem;
+          }
+          .score-row > * {
+            padding: 1rem;
           }
         }
       `}</style>
@@ -324,7 +343,7 @@ function Dashboard() {
               <div className="grid-container">
                 {/* Row 1: ProductivityScore */}
                 <ErrorBoundary>
-                  <div className="col-span-1 md:col-span-3">
+                  <div className="col-span-1 md:col-span-3 score-row">
                     <ProductivityScore
                       score={calculateScore(todayData.productiveTime, todayData.unproductiveTime)}
                       theme={theme}
