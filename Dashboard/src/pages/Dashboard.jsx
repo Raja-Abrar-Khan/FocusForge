@@ -125,7 +125,7 @@ function Dashboard() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-gradient-to-br from-[#0A0A2A] to-[#1E1E4A]' : 'bg-gradient-to-br from-gray-100 to-blue-100'} text-${theme === 'dark' ? 'gray-100' : 'gray-900'} font-montserrat`}>
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-gradient-to-br from-[#0A0A2A] to-[#1E1E4A]' : 'bg-gradient-to-br from-gray-100 to-blue-100'} text-${theme === 'dark' ? 'gray-100' : 'gray-900'} font-montserrat overflow-x-hidden`}>
       <style>{`
         .holographic {
           background: ${theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
@@ -221,16 +221,21 @@ function Dashboard() {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
-          max-width: 80rem;
+          width: 100%;
+          max-width: calc(100% - 2rem);
           margin: 0 auto;
+          box-sizing: border-box;
+          overflow-x: auto;
         }
         .grid-container > div {
           margin-bottom: 1rem;
+          min-width: 0;
         }
         @media (min-width: 1024px) and (max-width: 1440px) {
           .grid-container {
             grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
+            max-width: calc(100% - 1.5rem);
           }
           .md\\:col-span-2 {
             grid-column: span 2;
@@ -246,6 +251,8 @@ function Dashboard() {
           .grid-container {
             grid-template-columns: 1fr;
             gap: 1.5rem;
+            max-width: calc(100% - 1rem);
+            overflow-x: hidden;
           }
           .md\\:col-span-2, .md\\:col-span-3 {
             grid-column: span 1;
@@ -267,10 +274,11 @@ function Dashboard() {
           }
           .grid-container {
             gap: 1rem;
+            max-width: calc(100% - 0.5rem);
           }
           main {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
           }
           .todays-focus-container {
             padding: 0.5rem;
@@ -450,9 +458,10 @@ function Dashboard() {
       />
       {showFullTimeline && (
         <motion.div
-          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
+          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          onClick={() => setShowFullTimeline(false)}
         >
           <div className="p-6 max-w-3xl mx-auto">
             <motion.button
@@ -462,15 +471,16 @@ function Dashboard() {
             >
               Close
             </motion.button>
-            <ActivityTimeline history={history} theme={theme} showFull={true} />
+            <ActivityTimeline history={history} theme={theme} showFull={true} toggleFull={() => setShowFullTimeline(!showFullTimeline)} />
           </div>
         </motion.div>
       )}
       {showFullWeekly && (
         <motion.div
-          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto"
+          className="fixed inset-0 bg-[#0A0A2A]/90 z-50 overflow-y-auto cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          onClick={() => setShowFullWeekly(false)}
         >
           <div className="p-6 max-w-3xl mx-auto">
             <motion.button
@@ -480,7 +490,12 @@ function Dashboard() {
             >
               Close
             </motion.button>
-            <WeeklyActivityTimeline weeklyData={weeklyData} theme={theme} showFull={true} />
+            <WeeklyActivityTimeline
+              weeklyData={weeklyData}
+              theme={theme}
+              showFull={true}
+              toggleFull={() => setShowFullWeekly(!showFullWeekly)}
+            />
           </div>
         </motion.div>
       )}

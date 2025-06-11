@@ -19,13 +19,25 @@ function WeeklyActivityTimeline({ weeklyData, theme, showFull, toggleFull }) {
   const displayedDays = showFull ? weeklyData.dailyBreakdown : weeklyData.dailyBreakdown?.slice(0, 2) || [];
 
   return (
-    <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} className={showFull ? 'tilt-disabled' : ''}>
+    <Tilt
+      tiltMaxAngleX={5}
+      tiltMaxAngleY={5}
+      tiltEnable={!showFull} // Disable tilt in full-screen
+      scale={1} // Prevent scaling on hover
+      className={showFull ? 'tilt-disabled' : ''}
+    >
       <motion.div
-        className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'} h-64 flex flex-col`}
+        className={`p-6 rounded-2xl holographic glow ${theme === 'dark' ? 'text-gray-100' : 'text-gray-900'} ${showFull ? 'h-auto' : 'h-64'} flex flex-col no-hover-scale`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        onClick={e => e.stopPropagation()} // Prevent clicks inside from closing modal
       >
+        <style>{`
+          .no-hover-scale:hover {
+            transform: none !important;
+          }
+        `}</style>
         <h2 className={`text-lg font-orbitron font-extrabold ${theme === 'dark' ? 'gold-gradient' : 'text-blue-900'} mb-4`}>
           Weekly Activities
         </h2>
@@ -40,7 +52,7 @@ function WeeklyActivityTimeline({ weeklyData, theme, showFull, toggleFull }) {
                     onClick={() => toggleDay(index)}
                     className={`w-full text-left flex justify-between items-center text-sm font-montserrat font-bold ${
                       theme === 'dark' ? 'text-[#FFD700]' : 'text-blue-600'
-                    }`}
+                    } cursor-pointer`}
                     whileHover={{ scale: 1.02 }}
                   >
                     <span>
@@ -100,13 +112,21 @@ function WeeklyActivityTimeline({ weeklyData, theme, showFull, toggleFull }) {
             </div>
           )}
         </div>
-        {!showFull && weeklyData.dailyBreakdown?.length > 2 && (
+        {!showFull && weeklyData.dailyBreakdown?.length > 2 ? (
           <motion.button
             onClick={toggleFull}
-            className="mt-3 px-4 py-2 bg-[#1E1E4A] text-[#FFD700] rounded-lg glow text-sm font-bold w-full"
+            className="mt-3 px-4 py-2 bg-[#1E1E4A] text-white rounded-lg glow text-sm font-bold w-full cursor-pointer"
             whileHover={{ scale: 1.05 }}
           >
             Show Full Week
+          </motion.button>
+        ) : showFull && (
+          <motion.button
+            onClick={toggleFull}
+            className="mt-3 px-4 py-2 bg-danger text-white rounded-lg glow text-sm font-bold w-full cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+          >
+            Close
           </motion.button>
         )}
       </motion.div>
