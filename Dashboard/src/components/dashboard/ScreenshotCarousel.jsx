@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CameraIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Tilt from 'react-parallax-tilt';
@@ -8,12 +8,42 @@ function ScreenshotCarousel({ screenshots, theme }) {
   const [selected, setSelected] = useState(null);
 
   const nextScreenshot = () => {
-    setCurrentIndex((prev) => (prev + 1) % screenshots.length);
+    const nextIndex = (currentIndex + 1) % screenshots.length;
+    setCurrentIndex(nextIndex);
+    if (selected) {
+      setSelected(screenshots[nextIndex]);
+    }
   };
 
   const prevScreenshot = () => {
-    setCurrentIndex((prev) => (prev - 1 + screenshots.length) % screenshots.length);
+    const prevIndex = (currentIndex - 1 + screenshots.length) % screenshots.length;
+    setCurrentIndex(prevIndex);
+    if (selected) {
+      setSelected(screenshots[prevIndex]);
+    }
   };
+
+  // Format timestamp with fallback
+  const formatTimestamp = (date) => {
+    try {
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate.getTime())) {
+        console.warn(`Invalid date: ${date}`);
+        return 'Unknown Time';
+      }
+      return parsedDate.toLocaleTimeString();
+    } catch (error) {
+      console.warn(`Error parsing date: ${date}`, error);
+      return 'Unknown Time';
+    }
+  };
+
+  // Log screenshots for debugging
+  useEffect(() => {
+    if (screenshots.length > 0) {
+      console.log('Screenshots data:', screenshots);
+    }
+  }, [screenshots]);
 
   return (
     <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10}>
@@ -38,7 +68,7 @@ function ScreenshotCarousel({ screenshots, theme }) {
               <motion.img
                 key={currentIndex}
                 src={screenshots[currentIndex].imageBase64}
-                alt={`Screenshot at ${new Date(screenshots[currentIndex].date).toLocaleTimeString()}`}
+                alt={`Screenshot at ${formatTimestamp(screenshots[currentIndex].date)}`}
                 className="max-w-full max-h-[80%] object-contain rounded border border-primary cursor-pointer"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -67,28 +97,53 @@ function ScreenshotCarousel({ screenshots, theme }) {
                 </>
               )}
               <p className="absolute bottom-2 text-xs text-secondary">
-                {new Date(screenshots[currentIndex].date).toLocaleTimeString()}
+                {formatTimestamp(screenshots[currentIndex].date)}
               </p>
             </div>
           )}
         </div>
         {selected && (
           <motion.div
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             onClick={() => setSelected(null)}
           >
-            <motion.div
-              className="p-4 bg-[#0A0A2A] rounded-lg glow"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img src={selected.imageBase64} alt="Full screenshot" className="max-w-full max-h-[80vh] rounded" />
-              <p className="text-sm text-primary mt-2">{selected.url}</p>
-              <p className="text-xs text-secondary">{new Date(selected.date).toLocaleTimeString()}</p>
-            </motion.div>
+            <div className="relative flex items-center justify-center w-full h-full">
+              <motion.img
+                src={selected.imageBase64}
+                alt={`Full screenshot at ${formatTimestamp(selected.date)}`}
+                className="w-full h-full object-contain"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.3 }}
+                onClick={(e) => e.stopPropagation()}
+              />
+              {screenshots.length > 1 && (
+                <>
+                  <motion.button
+                    onClick={(e) => { e.stopPropagation(); prevScreenshot(); }}
+                    className="absolute left-4 sm:left-8 p-3 bg-secondary text-primary rounded-full glow"
+                    whileHover={{ scale: 1.1 }}
+                    aria-label="Previous screenshot"
+                  >
+                    <ChevronLeftIcon className="w-8 sm:w-10 h-8 sm:h-10" />
+                  </motion.button>
+                  <motion.button
+                    onClick={(e) => { e.stopPropagation(); nextScreenshot(); }}
+                    className="absolute right-4 sm:right-8 p-3 bg-secondary text-primary rounded-full glow"
+                    whileHover={{ scale: 1.1 }}
+                    aria-label="Next screenshot"
+                  >
+                    <ChevronRightIcon className="w-8 sm:w-10 h-8 sm:h-10" />
+                  </motion.button>
+                </>
+              )}
+              {/* <div className="absolute bottom-4 sm:bottom-8 flex flex-col items-center gap-2">
+                <p className="text-sm sm:text-base font-medium text-primary text-center px-2">{selected.url || 'No URL available'}</p>
+                <p className="text-xs sm:text-sm text-secondary text-center">{formatTimestamp(selected.date)}</p>
+              </div> */}
+            </div>
           </motion.div>
         )}
       </motion.div>
