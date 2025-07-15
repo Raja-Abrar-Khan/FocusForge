@@ -57,21 +57,22 @@ With a sleek, futuristic React dashboard featuring **glassmorphism** and **neon 
 
 ### Backend Setup
 
-```bash
-git clone https://github.com/your-username/focusforge.git
-cd focusforge/backend
-npm install
 
-Create a .env file in the backend directory with:
+-git clone https://github.com/your-username/focusforge.git
+-cd focusforge/backend
+-npm install
 
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-HUGGING_FACE_TOKEN=your_hugging_face_token
-Start the server:
+**Create a .env file in the backend directory with:**
 
-npm start
+-PORT=5000
+-MONGO_URI=your_mongodb_connection_string
+-JWT_SECRET=your_jwt_secret
+-HUGGING_FACE_TOKEN=your_hugging_face_token
+-Start the server:
 
+-npm start
+
+---
 Frontend Setup
 
 cd ../frontend
