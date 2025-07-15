@@ -111,21 +111,21 @@ Activity streaks
 
 Hourly data
 
-🖼️ Screenshots
-(Add screenshots here later using: ![Alt Text](url) or local assets)
+**🖼️ Screenshots**
+---
 <img width="1920" height="1080" alt="Screenshot (29)" src="https://github.com/user-attachments/assets/7ffc5f55-98fa-4c75-abae-c9199aee3224" />
-
+---
 <img width="1920" height="1080" alt="Screenshot (30)" src="https://github.com/user-attachments/assets/d6a38e90-8e14-4a2d-952d-fb91472d9921" />
-
+---
 <img width="1920" height="1080" alt="Screenshot (31)" src="https://github.com/user-attachments/assets/9c82ebb4-b3ab-4018-8353-5a0ef1f9b15a" />
-
+---
 <img width="1920" height="1080" alt="Screenshot (32)" src="https://github.com/user-attachments/assets/3633edf7-66c0-4032-b7e8-6140dc350126" />
-
+---
 <img width="1920" height="1080" alt="Screenshot (33)" src="https://github.com/user-attachments/assets/a5d3b4d8-0366-4673-b315-30dbe3b37c6c" />
-
+---
 <img width="1920" height="1080" alt="Screenshot (36)" src="https://github.com/user-attachments/assets/8ddebffd-f2e1-4193-9196-314114f3f8c7" />
-
-📁 Project Structure
+---
+***📁 Project Structure***
 
 focusforge/
 ├── backend/
@@ -145,32 +145,34 @@ focusforge/
 │   ├── popup.jsx
 │   └── manifest.json
 └── README.md
-🤝 Contributing
+---
+**🤝 Contributing**
 Pull requests are welcome!
 
-Fork the repo
+-Fork the repo
 
-Create a feature branch:
+-Create a feature branch:
 
+-git checkout -b feature/your-feature
 
-git checkout -b feature/your-feature
-Commit changes:
+-Commit changes:
 
-git commit -m "Add new feature"
-Push and open a PR
+-git commit -m "Add new feature"
+
+-Push and open a PR
 
 Please follow the coding standards and include tests when applicable.
+---
 
-📜 License
+**📜 License**
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-👤 Author
+**👤 Author**
 Raja Abrar Khan
 📧 abrarkhan778008@gmail.com
 
-✅ TODOs
- Add deployed link once hosted
+**✅ TODOs**
 
- Add dashboard screenshots
-
- Improve error handling in backend
+ -Add deployed link once hosted
+ -Add dashboard screenshots
+ -Improve error handling in backend
