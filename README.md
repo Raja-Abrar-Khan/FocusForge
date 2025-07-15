@@ -124,28 +124,7 @@ Hourly data
 <img width="1920" height="1080" alt="Screenshot (33)" src="https://github.com/user-attachments/assets/a5d3b4d8-0366-4673-b315-30dbe3b37c6c" />
 ---
 <img width="1920" height="1080" alt="Screenshot (36)" src="https://github.com/user-attachments/assets/8ddebffd-f2e1-4193-9196-314114f3f8c7" />
----
-***📁 Project Structure***
 
-focusforge/
-├── backend/
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── routes/
-│   └── server.js
-├── frontend/
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       └── App.jsx
-├── extension/
-│   ├── background.js
-│   ├── content.js
-│   ├── popup.jsx
-│   └── manifest.json
-└── README.md
----
 **🤝 Contributing**
 Pull requests are welcome!
 
